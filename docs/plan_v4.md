@@ -1018,6 +1018,35 @@ Not AI.
 Not ML.
 Not advanced analytics.
 
+
+# 19. AI Build Directives (Executive Constraints)
+
+The following directives are strict architectural constraints. When implementing the features below, prioritize these approaches to ensure stability, simplicity, and successful deployment without relying on overly complex native workarounds.
+
+### 19.1 Background Execution & Camera Lifecycle
+* **Decision:** Keep the Baby Unit in the Foreground (OLED Blackout).
+* **AI Directive:** Do not attempt to write custom Java/Kotlin native modules to run the camera and WebRTC in a background service. Instead, keep the Baby Unit app in the foreground at all times. Implement an OLED "Stealth Mode" (a `#000000` full-screen UI overlay) to turn off the screen pixels, and use Android's `Wakelock` to prevent the device CPU from sleeping.
+
+### 19.2 Audio Echo & Feedback Loops
+* **Decision:** Software Mic Muting (Walkie-Talkie Mode).
+* **AI Directive:** Do not rely solely on hardware Acoustic Echo Cancellation (AEC). Implement a software-level "Mic Mute" state on the Baby Unit. When the Parent Unit holds the "Talk" button, send a Data Channel message to the Baby Unit to mute its microphone. When the Parent releases the button, send a payload to unmute the Baby Unit.
+
+### 19.3 Thermal Management Triggers
+* **Decision:** Battery Temperature Proxy.
+* **AI Directive:** Use a React Native device info library to read the Android battery temperature. If the battery temperature exceeds 40°C (104°F), trigger the thermal degradation protocol (lower the WebRTC bitrate and drop FPS). Do not use a time-based guess for thermal throttling.
+
+### 19.4 Pairing JWT "Time Drift"
+* **Decision:** 2-Minute Leeway.
+* **AI Directive:** When validating the pairing JWT on the Parent Unit, implement a 120-second (2-minute) "clock skew" leeway. Accept tokens that appear up to 2 minutes expired or 2 minutes from the future to account for normal Android system clock drift.
+
+### 19.5 Sentry Mode Video Throttling
+* **Decision:** WebRTC Parameter Throttling.
+* **AI Directive:** To achieve the 1 FPS Sentry mode, use the WebRTC `RTCRtpSender.setParameters()` API to dynamically drop the `maxFramerate` to 1. Do not implement manual canvas drawing or custom frame capturing routines to achieve this.
+
+### 19.6 The Local LAN Disconnect
+* **Decision:** Proactive Reconnect.
+* **AI Directive:** Use React Native `NetInfo` on the Parent Unit. If the Parent Unit detects a network switch (e.g., WiFi dropping to 4G), it must immediately send a 'Network Changed' payload to the Signaling Server, instructing the Baby Unit to restart ICE candidates. Do not wait for the 30-second Ghost timeout to realize the local UDP socket has died.
+
 A reliable low-latency monitor with:
 
 * stable reconnects
