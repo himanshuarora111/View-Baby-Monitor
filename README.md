@@ -90,6 +90,8 @@ To maximize the battery life of the Baby Unit, the app operates in three distinc
 ---
 
 ## ⚖️ License
-**Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)**
+This project is **Source Available** for personal and educational use. 
+- ✅ **Allowed:** Personal learning, private modification, and experimentation.
+- ❌ **Prohibited:** Redistribution as a product (paid or free), commercial use, or uploading to App Stores.
 
-*This means you are free to use, modify, and build upon this code for personal use. However, you **CANNOT** use this software for commercial purposes, including but not limited to, selling it as a paid app on the Google Play Store or Apple App Store. Any derivative works must be shared under this same license.*
+See [LICENSE.md](LICENSE.md) for the full legal terms.
